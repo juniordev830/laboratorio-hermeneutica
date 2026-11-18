@@ -16,7 +16,11 @@ createRoot(document.getElementById('root')!).render(
     <main id="conteudo">
       <div className="intro">
         <h1>Laboratório de hermenêutica</h1>
-        <p>SUBLaboratório de hermenêutica</p>
+        <nav className="atalhos" aria-label="Seções desta página">
+          <a href="#ficha">Ficha de estudo</a>
+          <a href="#exemplos">Exemplos</a>
+          <a href="#estudos">Estudos salvos</a>
+        </nav>
       </div>
       <App />
     </main>
