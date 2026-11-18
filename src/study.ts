@@ -30,6 +30,24 @@ export function validate(study: Study) {
   return '';
 }
 
+function isSavedStudy(value: unknown): value is Study {
+  if (!value || typeof value !== 'object') return false;
+  const study = value as Record<string, unknown>;
+  return typeof study.id === 'string' && study.id.length > 0
+    && typeof study.passage === 'string' && typeof study.genre === 'string'
+    && genres.some(genre => genre === study.genre)
+    && fields.every(([field]) => typeof study[field] === 'string');
+}
+
+export function parseSavedStudies(raw: string): Study[] {
+  const studies: unknown = JSON.parse(raw);
+  if (!Array.isArray(studies) || !studies.every(isSavedStudy)
+      || new Set(studies.map(study => study.id)).size !== studies.length) {
+    throw new Error('Formato inválido das fichas salvas.');
+  }
+  return studies;
+}
+
 function escapeHeading(text: string) {
   return text.replace(/[\r\n]+/g, ' ').replace(/[\\`*_{}\[\]<>#+!|]/g, '\\$&');
 }

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { download } from './download.ts';
-import { blankStudy, examples, exportStudy, fields, genres, validate } from './study.ts';
+import { blankStudy, examples, exportStudy, fields, genres, parseSavedStudies, validate } from './study.ts';
 import type { Genre, Study } from './study.ts';
 import { useLocalState } from './storage.ts';
 
 export default function App() {
-  const [studies, setStudies, storageError] = useLocalState<Study[]>('hermeneutica-v1', []);
+  const [studies, setStudies, storageError] = useLocalState<Study[]>('hermeneutica-v1', [], parseSavedStudies);
   const [draft, setDraft] = useState(blankStudy);
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
@@ -42,7 +42,7 @@ export default function App() {
             aria-describedby={'field-guide-' + i} onChange={event => setDraft({ ...draft, [key]: event.target.value })} />
         </label>)}
         {(error || storageError) && <p role="alert" className="error">{error || storageError}</p>}
-        {status && <p role="status">{status}</p>}
+        {status && <p role="status">{storageError ? 'Estudo disponível nesta sessão.' : status}</p>}
         <div className="row">
           <button className="primary">Salvar estudo</button>
           <button type="button" disabled={Boolean(validate(draft))} onClick={() => download('estudo-biblico.md', exportStudy(draft), 'text/markdown')}>Exportar Markdown</button>
