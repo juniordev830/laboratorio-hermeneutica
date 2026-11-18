@@ -1,6 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { blankStudy, examples, exportStudy, fields, validate } from '../src/study.ts';
+import { blankStudy, examples, exportStudy, fields, parseSavedStudies, validate } from '../src/study.ts';
+
+test('carrega fichas existentes e detecta registros incompletos e IDs duplicados', () => {
+  const study = examples[0].study;
+  assert.deepEqual(parseSavedStudies(JSON.stringify([study])), [study]);
+  for (const raw of ['{}', '[null]', JSON.stringify([study, study]), JSON.stringify([{ ...study, observation: 123 }])]) {
+    assert.throws(() => parseSavedStudies(raw), /Formato inválido/);
+  }
+});
 
 test('uma ficha exige passagem e observação separada', () => {
   assert.match(validate(blankStudy()), /passagem/);
