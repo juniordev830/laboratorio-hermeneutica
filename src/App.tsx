@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { download } from './download.ts';
-import { blankStudy, examples, exportStudy, fields, genres, parseSavedStudies, validate } from './study.ts';
+import { blankStudy, examples, exportStudy, fields, findStudies, genres, parseSavedStudies, validate } from './study.ts';
 import type { Genre, Study } from './study.ts';
 import { useLocalState } from './storage.ts';
 
@@ -11,6 +11,8 @@ export default function App() {
   const [error, setError] = useState('');
   const [status, setStatus] = useState('');
   const [template, setTemplate] = useState('');
+  const [query, setQuery] = useState('');
+  const visibleStudies = findStudies(studies, query);
 
   function edit(study: Study) {
     setDraft(study);
@@ -72,7 +74,9 @@ export default function App() {
       <section className="panel stack">
         <h2>Estudos salvos</h2>
         {!studies.length && <p className="muted">Seus estudos aparecem aqui após salvar.</p>}
-        <ul className="list">{[...studies].reverse().map(study => <li key={study.id}><button className="selection" onClick={() => edit(study)}>{study.passage} · {study.genre}</button></li>)}</ul>
+        {studies.length > 0 && <label>Pesquisar estudos<input type="search" value={query} onChange={event => setQuery(event.target.value)} /></label>}
+        {studies.length > 0 && !visibleStudies.length && <p className="muted" role="status">Nenhum estudo corresponde à busca.</p>}
+        <ul className="list">{visibleStudies.map(study => <li key={study.id}><button className="selection" onClick={() => edit(study)}>{study.passage} · {study.genre}</button></li>)}</ul>
       </section>
     </aside>
   </div>;
