@@ -1,6 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { blankStudy, examples, exportStudy, fields, parseSavedStudies, validate } from '../src/study.ts';
+import { blankStudy, examples, exportStudy, fields, findStudies, parseSavedStudies, validate } from '../src/study.ts';
+
+test('busca une termos da passagem e do conteúdo', () => {
+  const lesson = { ...blankStudy(), passage: 'João 15:1–8', observation: 'Oração e unidade' };
+  const other = { ...blankStudy(), passage: 'Efésios 4:1–6', observation: 'Oração' };
+  assert.deepEqual(findStudies([lesson, other], 'joao oracao'), [lesson]);
+  assert.deepEqual(findStudies([lesson, other], ''), [other, lesson]);
+});
 
 test('carrega fichas existentes e detecta registros incompletos e IDs duplicados', () => {
   const study = examples[0].study;

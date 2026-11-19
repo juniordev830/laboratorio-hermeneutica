@@ -17,6 +17,15 @@ export const fields = [
   ['application', 'Aplicação', 'Que resposta concreta decorre da interpretação?'],
 ] as const;
 
+export function findStudies(studies: Study[], query: string): Study[] {
+  const normalize = (text: string) => text.normalize('NFD').replace(/\p{M}+/gu, '').toLowerCase();
+  const words = normalize(query).trim().split(/\s+/).filter(Boolean);
+  return studies.filter(study => {
+    const text = normalize([study.passage, study.genre, ...fields.map(([key]) => study[key])].join(' '));
+    return words.every(word => text.includes(word));
+  }).reverse();
+}
+
 export function blankStudy(): Study {
   return { id: '', passage: '', genre: 'Narrativa', literary: '', historical: '', observation: '',
     questions: '', references: '', hypothesis: '', comparison: '', application: '' };
