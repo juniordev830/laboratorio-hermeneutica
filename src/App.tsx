@@ -31,7 +31,7 @@ export default function App() {
   }
 
   return <div className="split">
-    <section className="panel stack">
+    <section className="panel stack" id="ficha" tabIndex={-1}>
       <div className="row between"><h2>Ficha de estudo</h2><button onClick={() => edit(blankStudy())}>Nova ficha</button></div>
       <form className="form" onSubmit={save}>
         <div className="two collapse">
@@ -52,7 +52,7 @@ export default function App() {
       </form>
     </section>
     <aside className="stack">
-      <section className="panel stack">
+      <section className="panel stack" id="exemplos" tabIndex={-1}>
         <h2>Exemplos comentados</h2>
         <ul className="list">{examples.map(({ study, prompt, guide }) => <li className="subtle" key={study.id}>
           <details>
@@ -71,7 +71,7 @@ export default function App() {
           </details>
         </li>)}</ul>
       </section>
-      <section className="panel stack">
+      <section className="panel stack" id="estudos" tabIndex={-1}>
         <h2>Estudos salvos</h2>
         {!studies.length && <p className="muted">Seus estudos aparecem aqui após salvar.</p>}
         {studies.length > 0 && <label>Pesquisar estudos<input type="search" value={query} onChange={event => setQuery(event.target.value)} /></label>}
